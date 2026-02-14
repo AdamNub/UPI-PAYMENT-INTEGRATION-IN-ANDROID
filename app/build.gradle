@@ -45,7 +45,7 @@ publishing {
     publications {
         release(MavenPublication) {
             groupId = 'com.github.AdamNub'
-            artifactId = 'UPI-PAYMENT-INTEGRATION-IN-ANDROID'
+            artifactId = 'UPI-PAY'
             version = '1.0.0'
             
             afterEvaluate {
