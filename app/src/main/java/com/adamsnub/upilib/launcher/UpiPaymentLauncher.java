@@ -12,12 +12,12 @@ import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
 
-import com.adamsnub.upilib.builder.UpiIntentBuilder;
+import com.adamsnub.upilib.utils.UpiIntentBuilder;     
 import com.adamsnub.upilib.detector.UpiAppDetector;
 import com.adamsnub.upilib.models.PaymentRequest;
 import com.adamsnub.upilib.models.TransactionResponse;
 import com.adamsnub.upilib.models.UpiApp;
-import com.adamsnub.upilib.parser.UpiResponseParser;
+import com.adamsnub.upilib.parser.UpiResponseParser;     
 
 import java.util.List;
 
@@ -69,14 +69,7 @@ public class UpiPaymentLauncher {
             
             if (listener != null) {
                 listener.onTransactionCompleted(transactionResponse);
-                
-                if (transactionResponse.isSuccess()) {
-                    listener.onTransactionSuccess();
-                } else if (transactionResponse.isFailure()) {
-                    listener.onTransactionFailed();
-                } else if (transactionResponse.isCancelled()) {
-                    listener.onTransactionCancelled();
-                }
+                // Don't call separate methods - they don't exist in interface
             }
         } else {
             if (listener != null) {
@@ -106,7 +99,6 @@ public class UpiPaymentLauncher {
         this.currentRequest = request;
         this.targetPackage = targetPackage;
 
-        // Check if ANY UPI apps exist
         List<UpiApp> installedApps = appDetector.getInstalledUpiApps();
         Log.d(TAG, "Found " + installedApps.size() + " UPI apps installed");
         
@@ -118,7 +110,6 @@ public class UpiPaymentLauncher {
             return;
         }
 
-        // Check if target app exists (if specified)
         if (targetPackage != null && !targetPackage.isEmpty()) {
             boolean appFound = false;
             for (UpiApp app : installedApps) {
@@ -136,7 +127,6 @@ public class UpiPaymentLauncher {
             }
         }
 
-        // Only proceed if we have UPI apps
         try {
             Uri upiUri = intentBuilder.buildUpiUri(request);
             Intent intent = intentBuilder.createIntent(upiUri, targetPackage);
@@ -144,7 +134,7 @@ public class UpiPaymentLauncher {
         } catch (Exception e) {
             Log.e(TAG, "Error launching payment", e);
             if (listener != null) {
-                listener.onTransactionFailed();
+                listener.onTransactionCancelled();
             }
         }
     }

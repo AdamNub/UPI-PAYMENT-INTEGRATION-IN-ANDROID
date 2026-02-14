@@ -1,4 +1,4 @@
-package com.adamsnub.upilib.builder;
+package com.adamsnub.upilib.utils;
 
 import android.content.Intent;
 import android.net.Uri;

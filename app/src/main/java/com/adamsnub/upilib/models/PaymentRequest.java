@@ -1,6 +1,8 @@
 package com.adamsnub.upilib.models;
 
-public class PaymentRequest {
+import java.io.Serializable;
+
+public class PaymentRequest implements Serializable {
     private String payeeVpa;        // payee@bank
     private String payeeName;        // Merchant name
     private String amount;           // "100.00"

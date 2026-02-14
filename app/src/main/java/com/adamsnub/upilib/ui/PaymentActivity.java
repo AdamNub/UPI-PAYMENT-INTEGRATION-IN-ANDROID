@@ -18,7 +18,7 @@ import com.adamsnub.upilib.launcher.PaymentStatusListener;
 import com.adamsnub.upilib.models.PaymentRequest;
 import com.adamsnub.upilib.models.UpiApp;
 import com.adamsnub.upilib.utils.UpiIntentBuilder;
-import com.adamsnub.upilib.utils.UpiResponseParser;
+import com.adamsnub.upilib.parser.UpiResponseParser;
 
 import java.util.List;
 
