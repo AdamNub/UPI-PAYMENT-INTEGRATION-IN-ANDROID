@@ -2,14 +2,12 @@ package com.adamsnub.upilib.ui;
 
 import android.app.Activity;
 import android.content.Intent;
-import android.content.pm.PackageManager;
 import android.net.Uri;
 import android.os.Bundle;
-import android.widget.Toast;
+import android.widget.ProgressBar;
+import android.widget.TextView;
 
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
 
 import com.adamsnub.upilib.R;
 import com.adamsnub.upilib.Singleton;
@@ -17,8 +15,8 @@ import com.adamsnub.upilib.detector.UpiAppDetector;
 import com.adamsnub.upilib.launcher.PaymentStatusListener;
 import com.adamsnub.upilib.models.PaymentRequest;
 import com.adamsnub.upilib.models.UpiApp;
-import com.adamsnub.upilib.utils.UpiIntentBuilder;
 import com.adamsnub.upilib.parser.UpiResponseParser;
+import com.adamsnub.upilib.utils.UpiIntentBuilder;
 
 import java.util.List;
 
@@ -26,7 +24,8 @@ public class PaymentActivity extends AppCompatActivity {
 
     private PaymentRequest paymentRequest;
     private UpiIntentBuilder intentBuilder;
-    private List<UpiApp> upiApps;
+    private TextView tvResult;
+    private ProgressBar progressBar;
     private static final int UPI_PAYMENT_REQUEST = 1001;
 
     @Override
@@ -34,17 +33,25 @@ public class PaymentActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_payment);
 
+        tvResult = findViewById(R.id.tvResult);
+        progressBar = findViewById(R.id.progressBar);
+
         paymentRequest = (PaymentRequest) getIntent().getSerializableExtra("payment_request");
         intentBuilder = new UpiIntentBuilder();
-        
-        detectUpiAppsAndShowList();
+
+        if (paymentRequest == null) {
+            finish();
+            return;
+        }
+
+        launchUpiAppDirectly();
     }
 
-    private void detectUpiAppsAndShowList() {
+    private void launchUpiAppDirectly() {
         UpiAppDetector detector = new UpiAppDetector(this);
-        upiApps = detector.getInstalledUpiApps();
+        List<UpiApp> apps = detector.getInstalledUpiApps();
 
-        if (upiApps.isEmpty()) {
+        if (apps.isEmpty()) {
             PaymentStatusListener listener = Singleton.getListener();
             if (listener != null) {
                 listener.onAppNotFound();
@@ -53,60 +60,51 @@ public class PaymentActivity extends AppCompatActivity {
             return;
         }
 
-        // Show list of UPI apps (you can create a RecyclerView)
-        showUpiAppList();
-    }
-
-    private void showUpiAppList() {
-        // For simplicity, just launch with first app or show chooser
-        // In a real implementation, show a list for user to choose
-        
-        if (upiApps.size() == 1) {
-            // Only one app, launch directly
-            launchUpiApp(upiApps.get(0).getPackageName());
-        } else {
-            // Show chooser
-            launchUpiApp(null);
+        try {
+            Uri uri = intentBuilder.buildUpiUri(paymentRequest);
+            Intent intent = new Intent(Intent.ACTION_VIEW, uri);
+            startActivityForResult(intent, UPI_PAYMENT_REQUEST);
+            
+            // Update UI
+            tvResult.setText("Launching UPI app...");
+            
+        } catch (Exception e) {
+            e.printStackTrace();
+            tvResult.setText("Error: " + e.getMessage());
+            progressBar.setVisibility(android.view.View.GONE);
         }
-    }
-
-    private void launchUpiApp(String targetPackage) {
-        Uri uri = intentBuilder.buildUpiUri(paymentRequest);
-        Intent intent = new Intent(Intent.ACTION_VIEW, uri);
-        
-        if (targetPackage != null) {
-            intent.setPackage(targetPackage);
-        }
-        
-        startActivityForResult(intent, UPI_PAYMENT_REQUEST);
     }
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        
+
         if (requestCode == UPI_PAYMENT_REQUEST) {
             PaymentStatusListener listener = Singleton.getListener();
-            
+
             if (resultCode == Activity.RESULT_OK && data != null) {
                 String response = data.getStringExtra("response");
                 if (listener != null) {
                     listener.onTransactionCompleted(
-                        UpiResponseParser.parse(response)
+                            UpiResponseParser.parse(response)
                     );
                 }
+                tvResult.setText("Payment completed!");
             } else {
                 if (listener != null) {
                     listener.onTransactionCancelled();
                 }
+                tvResult.setText("Payment cancelled");
             }
-            finish();
+            progressBar.setVisibility(android.view.View.GONE);
+            
+            // Close after 1 second
+            new android.os.Handler().postDelayed(new Runnable() {
+                @Override
+                public void run() {
+                    finish();
+                }
+            }, 1000);
         }
-    }
-
-    @Override
-    protected void onDestroy() {
-        super.onDestroy();
-        // Don't clear listener here - let the main activity handle it
     }
 }
