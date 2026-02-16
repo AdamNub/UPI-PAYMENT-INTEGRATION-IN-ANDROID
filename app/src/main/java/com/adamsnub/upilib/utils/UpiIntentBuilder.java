@@ -16,7 +16,8 @@ public class UpiIntentBuilder {
                 .appendQueryParameter("am", request.getAmount())
                 .appendQueryParameter("tr", request.getTransactionRef())
                 .appendQueryParameter("cu", request.getCurrency())
-                .appendQueryParameter("mode", "04");
+                .appendQueryParameter("mode", "04")
+                .appendQueryParameter("purpose", "00");  
         
         if (request.getTransactionNote() != null && !request.getTransactionNote().isEmpty()) {
             builder.appendQueryParameter("tn", request.getTransactionNote());
