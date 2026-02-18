@@ -15,9 +15,9 @@ public class UpiIntentBuilder {
                 .appendQueryParameter("pn", request.getPayeeName())
                 .appendQueryParameter("am", request.getAmount())
                 .appendQueryParameter("tr", request.getTransactionRef())
-                .appendQueryParameter("cu", request.getCurrency())
-                .appendQueryParameter("mode", "04")
-                .appendQueryParameter("purpose", "00");  
+                .appendQueryParameter("cu", request.getCurrency());
+                // .appendQueryParameter("mode", "04")     // ← COMMENT OUT for personal VPA
+                // .appendQueryParameter("purpose", "00"); // ← COMMENT OUT for personal VPA
         
         if (request.getTransactionNote() != null && !request.getTransactionNote().isEmpty()) {
             builder.appendQueryParameter("tn", request.getTransactionNote());
