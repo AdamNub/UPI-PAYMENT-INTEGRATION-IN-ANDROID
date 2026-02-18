@@ -16,8 +16,8 @@ public class UpiIntentBuilder {
                 .appendQueryParameter("am", request.getAmount())
                 .appendQueryParameter("tr", request.getTransactionRef())
                 .appendQueryParameter("cu", request.getCurrency());
-                // .appendQueryParameter("mode", "04")     // ← COMMENT OUT for personal VPA
-                // .appendQueryParameter("purpose", "00"); // ← COMMENT OUT for personal VPA
+                // .appendQueryParameter("mode", "04")     // ← Good - commented out
+                // .appendQueryParameter("purpose", "00"); // ← Good - commented out
         
         if (request.getTransactionNote() != null && !request.getTransactionNote().isEmpty()) {
             builder.appendQueryParameter("tn", request.getTransactionNote());
@@ -35,7 +35,8 @@ public class UpiIntentBuilder {
         if (targetPackage != null && !targetPackage.isEmpty()) {
             intent.setPackage(targetPackage);
         }
-        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+        //Removed flag causing error in payment on phonepe
+        // intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
         return intent;
     }
     

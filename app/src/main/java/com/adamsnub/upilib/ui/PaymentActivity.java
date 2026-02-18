@@ -63,9 +63,11 @@ public class PaymentActivity extends AppCompatActivity {
         try {
             Uri uri = intentBuilder.buildUpiUri(paymentRequest);
             Intent intent = new Intent(Intent.ACTION_VIEW, uri);
-            startActivityForResult(intent, UPI_PAYMENT_REQUEST);
             
-            // Update UI
+            // Show app chooser for better UX
+            // Sometimes shows error " payment failed"
+            startActivityForResult(Intent.createChooser(intent, "Pay with UPI app"), UPI_PAYMENT_REQUEST);
+            
             tvResult.setText("Launching UPI app...");
             
         } catch (Exception e) {
