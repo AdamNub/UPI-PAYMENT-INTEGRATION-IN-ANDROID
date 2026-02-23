@@ -46,7 +46,7 @@ publishing {
         release(MavenPublication) {
             groupId = 'com.github.AdamNub'
             artifactId = 'UPI-PAY'
-            version = '1.0.0'
+            version = '1.2.0'
             
             afterEvaluate {
                 from components.release
