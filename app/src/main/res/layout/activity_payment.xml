@@ -1,33 +1,62 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:orientation="vertical"
-    android:gravity="center"
-    android:padding="20dp"
-    android:background="#FFFFFF">
+<LinearLayout
+     xmlns:android="http://schemas.android.com/apk/res/android"
+     android:layout_height="match_parent"
+     android:layout_width="match_parent"
+     android:gravity="center_horizontal"
+     android:background="#FFFFFF"
+     android:padding="16dp"
+     android:orientation="vertical">
 
     <ProgressBar
-        android:id="@+id/progressBar"
-        android:layout_width="48dp"
-        android:layout_height="48dp"
-        android:layout_marginBottom="20dp"/>
+         android:layout_height="48dp"
+         android:layout_width="48dp"
+         android:layout_marginBottom="20dp"
+         android:visibility="visible"
+         android:id="@+id/progressBar" />
 
     <TextView
-        android:id="@+id/tvResult"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Processing payment..."
-        android:textSize="18sp"
-        android:textStyle="bold"
-        android:textColor="#333333"
-        android:layout_marginBottom="8dp"/>
+         android:layout_height="wrap_content"
+         android:layout_width="wrap_content"
+         android:layout_marginBottom="20dp"
+         android:textSize="16sp"
+         android:textColor="#333333"
+         android:id="@+id/tvResult"
+         android:text="Processing payment..." />
 
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Please wait while we connect to UPI app"
-        android:textSize="14sp"
-        android:textColor="#666666"/>
+    <LinearLayout
+         android:layout_height="wrap_content"
+         android:layout_width="match_parent"
+         android:visibility="gone"
+         android:gravity="center"
+         android:orientation="vertical"
+         android:id="@+id/qrLayout">
+
+        <TextView
+             android:layout_height="wrap_content"
+             android:layout_width="wrap_content"
+             android:layout_marginBottom="16dp"
+             android:textSize="14sp"
+             android:textColor="#666666"
+             android:id="@+id/tvQrInstruction"
+             android:text="Scan this QR code with any UPI app" />
+
+        <ImageView
+             android:layout_height="250dp"
+             android:layout_width="250dp"
+             android:layout_marginBottom="16dp"
+             android:scaleType="fitCenter"
+             android:background="#F5F5F5"
+             android:id="@+id/ivQrCode" />
+
+        <Button
+             android:layout_height="40dp"
+             android:layout_width="wrap_content"
+             android:background="#4CAF50"
+             android:textColor="#FFFFFF"
+             android:id="@+id/btnRetryIntent"
+             android:text="Try Again with Intent" />
+
+    </LinearLayout>
 
 </LinearLayout>
