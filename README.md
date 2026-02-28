@@ -36,7 +36,7 @@ Step 2: Add Dependency
 
 ```gradle
 dependencies
-    'com.github.AdamNub:Adamz-UPi:1.0.9' 
+    'com.github.AdamNub:Adamz-UPi:1.4.0' 
 ```
 
 Step 3: Sync Project
