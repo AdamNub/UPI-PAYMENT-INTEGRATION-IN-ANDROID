@@ -86,7 +86,14 @@ public class PaymentActivity extends AppCompatActivity {
         }
 
         try {
-            Uri uri = intentBuilder.buildUpiUri(paymentRequest);
+            Uri uri;
+            // Pass merchant code if available
+            if (paymentRequest.getMerchantCode() != null && !paymentRequest.getMerchantCode().isEmpty()) {
+                uri = intentBuilder.buildUpiUri(paymentRequest, paymentRequest.getMerchantCode());
+            } else {
+                uri = intentBuilder.buildUpiUri(paymentRequest);
+            }
+            
             Intent intent = new Intent(Intent.ACTION_VIEW, uri);
             
             startActivityForResult(Intent.createChooser(intent, "Pay with UPI app"), UPI_PAYMENT_REQUEST);
